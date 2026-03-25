@@ -4,7 +4,7 @@
         Title="设置打开微信快捷键"
         Width="440"
         Height="270"
-        Icon="Assets/logo.ico"
+        Icon="pack://application:,,,/Assets/logo.ico"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#FFF7F8FA">

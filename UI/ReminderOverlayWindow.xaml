@@ -4,7 +4,7 @@
         Title="微信提醒"
         Width="560"
         Height="300"
-        Icon="Assets/logo.ico"
+        Icon="pack://application:,,,/Assets/logo.ico"
         MinWidth="560"
         MinHeight="300"
         WindowStartupLocation="Manual"
