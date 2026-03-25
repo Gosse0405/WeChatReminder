@@ -347,3 +347,112 @@ WeChatReminder
 这是一个典型的“Windows 桌面辅助工具”项目：整体结构不复杂，但实现细节很贴近真实桌面环境，重点在于托盘定位、屏幕采样、提醒节流以及打开微信的多级回退策略。
 
 如果你的目标是继续迭代它，这份代码已经具备一个比较清晰的基础骨架，适合继续往“稳定性”“兼容性”和“可维护性”三个方向推进。
+
+## GitHub Release 自动化
+
+项目当前已经接入 GitHub Actions 自动发布流程，工作流文件位置：
+
+```text
+.github/workflows/release.yml
+```
+
+### 当前已接入的能力
+
+- 打 tag 后自动构建 Windows `win-x64` 单文件 exe
+- 自动生成 zip 包
+- 自动创建或更新 GitHub Release
+- 自动上传 exe 和 zip 两个附件
+- 发布时自动注入版本号到程序集和 exe 文件属性
+
+### 版本号规则
+
+项目默认版本已经设置为：
+
+- `Version`: `1.0.0`
+- `FileVersion`: `1.0.0.0`
+- `AssemblyVersion`: `1.0.0.0`
+
+如果 tag 采用下面这种格式：
+
+```text
+v1.2.3
+```
+
+工作流会自动把版本号识别为：
+
+- `Version = 1.2.3`
+- `FileVersion = 1.2.3.0`
+
+如果 tag 不是语义化版本格式，例如：
+
+```text
+release
+```
+
+工作流会回退使用默认版本：
+
+- `1.0.0`
+
+### 会自动响应哪些 tag
+
+当前工作流会自动响应这些 tag：
+
+- `release`
+- `Release`
+- `v*`
+
+例如：
+
+- `release`
+- `v1.0.0`
+- `v1.0.1`
+
+### 你现在这个 release tag 的注意事项
+
+如果某个 tag 是在工作流文件加入仓库之前就已经创建好的，GitHub 不会自动补跑这次发布。
+
+也就是说，你现在已经手动创建的：
+
+```text
+release
+```
+
+这个 tag 本身不会因为这次新增工作流而自动触发一次 Release。
+
+但是现在已经给你加了 `workflow_dispatch` 手动触发能力，所以你可以直接这样处理：
+
+1. 打开 GitHub 仓库的 `Actions`
+2. 选择 `release` 这个工作流
+3. 点击 `Run workflow`
+4. 在 `tag_name` 里填：
+
+```text
+release
+```
+
+5. 手动运行
+
+这样就可以基于你现有的 `release` tag 直接生成 GitHub Release。
+
+### 后续推荐发布方式
+
+以后建议优先使用语义化版本 tag，例如：
+
+```powershell
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+这样推上去后，GitHub Actions 会自动：
+
+- 构建单文件 exe
+- 生成 zip
+- 创建 Release
+- 上传附件
+
+### Release 产物
+
+工作流会上传两个附件：
+
+- `WeChatReminder-版本号-win-x64.exe`
+- `WeChatReminder-版本号-win-x64.zip`

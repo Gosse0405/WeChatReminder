@@ -1,0 +1,115 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+      - "release"
+      - "Release"
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Existing tag to build and publish"
+        required: true
+        default: "release"
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Resolve release metadata
+        id: meta
+        shell: pwsh
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $tag = "${{ inputs.tag_name }}"
+            $ref = "refs/tags/$tag"
+          }
+          else {
+            $tag = "${{ github.ref_name }}"
+            $ref = "${{ github.ref }}"
+          }
+
+          if ($tag -match '^v(?<version>\d+\.\d+\.\d+)$') {
+            $version = $Matches.version
+          }
+          elseif ($tag -match '^(?<version>\d+\.\d+\.\d+)$') {
+            $version = $Matches.version
+          }
+          else {
+            $version = "1.0.0"
+          }
+
+          $fileVersion = "$version.0"
+          $releaseName = "WeChatReminder $version"
+          $exeAssetName = "WeChatReminder-$version-win-x64.exe"
+          $zipAssetName = "WeChatReminder-$version-win-x64.zip"
+
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "ref=$ref" >> $env:GITHUB_OUTPUT
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "file_version=$fileVersion" >> $env:GITHUB_OUTPUT
+          "release_name=$releaseName" >> $env:GITHUB_OUTPUT
+          "exe_asset_name=$exeAssetName" >> $env:GITHUB_OUTPUT
+          "zip_asset_name=$zipAssetName" >> $env:GITHUB_OUTPUT
+
+      - name: Checkout tagged source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ steps.meta.outputs.ref }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Publish single-file app
+        shell: pwsh
+        run: |
+          dotnet restore .\WeChatReminder.csproj
+
+          dotnet publish .\WeChatReminder.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true `
+            -p:DebugType=None `
+            -p:DebugSymbols=false `
+            -p:Version=${{ steps.meta.outputs.version }} `
+            -p:FileVersion=${{ steps.meta.outputs.file_version }} `
+            -p:AssemblyVersion=${{ steps.meta.outputs.file_version }} `
+            -p:InformationalVersion=${{ steps.meta.outputs.version }} `
+            -p:IncludeSourceRevisionInInformationalVersion=false
+
+      - name: Prepare release assets
+        id: assets
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $PWD "bin\Release\net8.0-windows\win-x64\publish"
+          $sourceExe = Join-Path $publishDir "WeChatReminder.exe"
+          $exeAsset = Join-Path $publishDir "${{ steps.meta.outputs.exe_asset_name }}"
+          $zipAsset = Join-Path $publishDir "${{ steps.meta.outputs.zip_asset_name }}"
+
+          Copy-Item $sourceExe $exeAsset -Force
+          Compress-Archive -Path $exeAsset -DestinationPath $zipAsset -Force
+
+          "exe_asset=$exeAsset" >> $env:GITHUB_OUTPUT
+          "zip_asset=$zipAsset" >> $env:GITHUB_OUTPUT
+
+      - name: Create or update GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: ${{ steps.meta.outputs.release_name }}
+          generate_release_notes: true
+          files: |
+            ${{ steps.assets.outputs.exe_asset }}
+            ${{ steps.assets.outputs.zip_asset }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
