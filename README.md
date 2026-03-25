@@ -166,6 +166,14 @@ dotnet publish .\WeChatReminder.csproj -c Release -r win-x64 --self-contained tr
 
 如果你想更稳妥一些，也可以把这个 exe 单独压成一个 zip 再发，对方下载后解压运行即可。
 
+例如可以直接执行：
+
+### 压缩 Zip 命令
+
+```powershell
+Compress-Archive -Path .\bin\Release\net8.0-windows\win-x64\publish\WeChatReminder.exe -DestinationPath .\bin\Release\net8.0-windows\win-x64\publish\WeChatReminder-v1.0.0-win-x64.zip -Force
+```
+
 ### 图标说明
 
 项目当前已经接入：
@@ -371,6 +379,35 @@ WeChatReminder
 - `Version`: `1.0.0`
 - `FileVersion`: `1.0.0.0`
 - `AssemblyVersion`: `1.0.0.0`
+
+### 当前版本信息
+
+- 当前仓库默认版本：`v1.0.0`
+- `Version`: `1.0.0`
+- `FileVersion`: `1.0.0.0`
+- `AssemblyVersion`: `1.0.0.0`
+- `InformationalVersion`: `1.0.0`
+- 单文件发布产物命名示例：`WeChatReminder-1.0.0-win-x64.exe`
+- 压缩包命名示例：`WeChatReminder-v1.0.0-win-x64.zip`
+
+### 版本记录
+
+- `v1.0.0`
+  - 首个公开版本基线
+  - 支持微信托盘图标闪烁检测与提醒弹窗
+  - 支持“立即查看 / 10 分钟后提醒 / 1 小时后提醒”
+  - 支持自定义打开微信快捷键
+  - 支持单文件 `win-x64` 发布
+  - 支持统一图标写入托盘、窗口和 exe 文件
+  - 支持在 exe 文件属性中显示版本号
+  - 支持 GitHub Actions 自动构建 Release 并上传 exe / zip
+
+后续每发布一个版本时，建议继续在这里追加，例如：
+
+- `v1.0.1`
+  - 修复内容
+  - 新增内容
+  - 兼容性调整
 
 如果 tag 采用下面这种格式：
 
