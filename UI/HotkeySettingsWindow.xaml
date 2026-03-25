@@ -1,0 +1,96 @@
+<Window x:Class="WeChatReminder.UI.HotkeySettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="设置打开微信快捷键"
+        Width="440"
+        Height="270"
+        Icon="Assets/logo.ico"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#FFF7F8FA">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="14"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="设置打开微信快捷键"
+                   FontSize="20"
+                   FontWeight="SemiBold"
+                   Foreground="#FF1F2937"/>
+
+        <TextBlock Grid.Row="2"
+                   Text="你可以直接输入，也可以点击“开始录制”后按下组合键。"
+                   FontSize="13"
+                   Foreground="#FF6B7280"/>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="ShortcutTextBox"
+                     Height="38"
+                     Padding="10,8"
+                     FontSize="15"
+                     VerticalContentAlignment="Center"
+                     BorderBrush="#FFD1D5DB"
+                     BorderThickness="1"
+                     Background="White"
+                     PreviewKeyDown="ShortcutTextBox_PreviewKeyDown"/>
+
+            <Button x:Name="RecordButton"
+                    Grid.Column="2"
+                    Width="92"
+                    Height="38"
+                    Content="开始录制"
+                    Click="Record_Click"/>
+        </Grid>
+
+        <TextBlock x:Name="HintText"
+                   Grid.Row="6"
+                   Margin="2,0,0,0"
+                   Text="支持 Ctrl、Alt、Shift 与单个主键组合。"
+                   FontSize="12"
+                   Foreground="#FF6B7280"
+                   TextWrapping="Wrap"/>
+
+        <Grid Grid.Row="8" Margin="0,14,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="1"
+                    Width="86"
+                    Height="34"
+                    Content="恢复默认"
+                    Click="Reset_Click"/>
+
+            <Button Grid.Column="3"
+                    Width="72"
+                    Height="34"
+                    Content="取消"
+                    Click="Cancel_Click"/>
+
+            <Button Grid.Column="5"
+                    Width="72"
+                    Height="34"
+                    Content="保存"
+                    Click="Save_Click"/>
+        </Grid>
+    </Grid>
+</Window>

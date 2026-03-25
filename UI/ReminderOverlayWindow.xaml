@@ -1,0 +1,313 @@
+<Window x:Class="WeChatReminder.UI.ReminderOverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="微信提醒"
+        Width="560"
+        Height="300"
+        Icon="Assets/logo.ico"
+        MinWidth="560"
+        MinHeight="300"
+        WindowStartupLocation="Manual"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True"
+        ShowActivated="True"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Window.Resources>
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" CornerRadius="14">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#FF42D86F" Offset="0"/>
+                                    <GradientStop Color="#FF34C759" Offset="0.55"/>
+                                    <GradientStop Color="#FF22B54A" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.94"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.88"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="#FF111827"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderBrush" Value="#90D7E2EE"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="#B8FFFFFF"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#DAFFFFFF"/>
+                                <Setter TargetName="Root" Property="BorderBrush" Value="#B4C9D9E8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="34"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="#FF718096"/>
+            <Setter Property="Background" Value="#00FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#00FFFFFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" Background="Transparent" CornerRadius="17">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#B8FFFFFF"/>
+                                <Setter Property="Foreground" Value="#FF374151"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#D8EEF3F8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="18" Background="Transparent">
+        <Border CornerRadius="28"
+                Background="#10000000"
+                Margin="10,14,10,4"
+                IsHitTestVisible="False">
+            <Border.Effect>
+                <BlurEffect Radius="18"/>
+            </Border.Effect>
+        </Border>
+
+        <Border x:Name="CardBorder"
+                CornerRadius="28"
+                BorderThickness="1"
+                BorderBrush="#C8FFFFFF"
+                Background="#7AFFFFFF">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="28"
+                                  ShadowDepth="0"
+                                  Opacity="0.12"
+                                  Color="Black"/>
+            </Border.Effect>
+
+            <Grid ClipToBounds="True">
+                <Border CornerRadius="28"
+                        Background="#A8FFFFFF"
+                        Opacity="0.55"
+                        IsHitTestVisible="False">
+                    <Border.Effect>
+                        <BlurEffect Radius="22"/>
+                    </Border.Effect>
+                </Border>
+
+                <Ellipse Width="230"
+                         Height="230"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Top"
+                         Margin="-70,-92,0,0"
+                         Opacity="0.52"
+                         IsHitTestVisible="False">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#F8FFFFFF" Offset="0"/>
+                            <GradientStop Color="#8AEAF6FF" Offset="0.52"/>
+                            <GradientStop Color="#00FFFFFF" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.Effect>
+                        <BlurEffect Radius="34"/>
+                    </Ellipse.Effect>
+                </Ellipse>
+
+                <Ellipse Width="220"
+                         Height="220"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Bottom"
+                         Margin="0,0,-64,-84"
+                         Opacity="0.44"
+                         IsHitTestVisible="False">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#DCEBFAFF" Offset="0"/>
+                            <GradientStop Color="#6CD9EDF8" Offset="0.5"/>
+                            <GradientStop Color="#00FFFFFF" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.Effect>
+                        <BlurEffect Radius="36"/>
+                    </Ellipse.Effect>
+                </Ellipse>
+
+                <Border CornerRadius="26"
+                        Margin="10"
+                        Opacity="0.42"
+                        IsHitTestVisible="False">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                            <GradientStop Color="#B6FFFFFF" Offset="0.35"/>
+                            <GradientStop Color="#34FFFFFF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+
+                <Rectangle Opacity="0.04" IsHitTestVisible="False">
+                    <Rectangle.Fill>
+                        <DrawingBrush TileMode="Tile"
+                                      Viewport="0,0,12,12"
+                                      ViewportUnits="Absolute"
+                                      Viewbox="0,0,12,12"
+                                      ViewboxUnits="Absolute">
+                            <DrawingBrush.Drawing>
+                                <DrawingGroup>
+                                    <GeometryDrawing Brush="#FF64748B">
+                                        <GeometryDrawing.Geometry>
+                                            <GeometryGroup>
+                                                <EllipseGeometry Center="1,1" RadiusX="0.35" RadiusY="0.35"/>
+                                                <EllipseGeometry Center="7,4" RadiusX="0.3" RadiusY="0.3"/>
+                                                <EllipseGeometry Center="4,9" RadiusX="0.35" RadiusY="0.35"/>
+                                            </GeometryGroup>
+                                        </GeometryDrawing.Geometry>
+                                    </GeometryDrawing>
+                                </DrawingGroup>
+                            </DrawingBrush.Drawing>
+                        </DrawingBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <Grid Margin="28">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="24"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="14"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Width="54"
+                                Height="54"
+                                CornerRadius="27"
+                                Background="#FF34C759">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="18"
+                                                  ShadowDepth="0"
+                                                  Opacity="0.18"
+                                                  Color="#FF34C759"/>
+                            </Border.Effect>
+                            <TextBlock Text="微"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="White"
+                                       FontSize="22"
+                                       FontWeight="Bold"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock x:Name="TitleText"
+                                       Text="微信消息提醒"
+                                       FontSize="28"
+                                       FontWeight="SemiBold"
+                                       Foreground="#FF18212B"/>
+                            <TextBlock Text="检测到微信图标状态变化"
+                                       Margin="0,6,0,0"
+                                       FontSize="13"
+                                       Foreground="#FF6B7280"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="3"
+                                Style="{StaticResource CloseButtonStyle}"
+                                Content="×"
+                                Click="CloseButton_Click"/>
+                    </Grid>
+
+                    <TextBlock x:Name="MessageText"
+                               Grid.Row="2"
+                               Text="检测到微信图标正在闪烁，请及时查看。"
+                               FontSize="15"
+                               Foreground="#FF374151"
+                               TextWrapping="Wrap"
+                               LineHeight="26"/>
+
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="PrimaryButton"
+                                Grid.Column="0"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Content="立即查看"
+                                Click="OpenNow_Click"/>
+
+                        <Button Grid.Column="2"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Content="10 分钟后提醒"
+                                Click="Snooze_Click"/>
+
+                        <Button Grid.Column="4"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Content="1 小时后提醒"
+                                Click="Ignore_Click"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
